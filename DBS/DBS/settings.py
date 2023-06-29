@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'DBS.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE':'django.db.backends.postgresql',
-    #'NAME': BASE_DIR / 'src/Fahrraddiebstahl.csv',
+    'NAME': BASE_DIR / 'src/Database',
     }
 }
 

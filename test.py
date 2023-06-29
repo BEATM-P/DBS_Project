@@ -5,7 +5,7 @@ print(django.get_version())
 
 def create_database():
   
-    conn = psycopg2.connect(database="EMPLOYEE_DATABASE",
+    conn = psycopg2.connect(database="/src/database",
                         user='postgres', password='pass', 
                         host='127.0.0.1', port='8080')
   
