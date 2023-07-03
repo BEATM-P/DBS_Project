@@ -1,0 +1,1 @@
+/usr/bin/postgres "-D" "/home/pm/Uni/DBS/dbs-abgabe/bikes"
