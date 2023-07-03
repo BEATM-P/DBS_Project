@@ -132,3 +132,6 @@
 	    DELIKT char32,
 	    ERFASSUNGSGRUND char(32)
 	);
+2023-07-03 17:30:59.268 CEST [20086] ERROR:  role "smoere" does not exist
+2023-07-03 17:30:59.268 CEST [20086] STATEMENT:  CREATE USER MAPPING FOR smoere SERVER bikes
+	;
