@@ -50,3 +50,7 @@
 2023-07-03 12:22:24.590 CEST [23892] LOG:  invalid record length at 0/1777240: wanted 24, got 0
 2023-07-03 12:22:24.590 CEST [23892] LOG:  redo done at 0/1777208 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
 2023-07-03 12:22:24.636 CEST [23890] LOG:  database system is ready to accept connections
+2023-07-03 12:39:31.556 CEST [23890] LOG:  received smart shutdown request
+2023-07-03 12:39:31.573 CEST [23890] LOG:  background worker "logical replication launcher" (PID 23898) exited with exit code 1
+2023-07-03 12:39:31.573 CEST [23893] LOG:  shutting down
+2023-07-03 12:39:31.632 CEST [23890] LOG:  database system is shut down
