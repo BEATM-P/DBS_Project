@@ -8,7 +8,7 @@ print(params)
 engine = psycopg2.connect(**params)
 print('Python connected to PostgreSQL!')
 # Create table
-cur = con.cursor()
+cur = engine.cursor()
 cur.execute("""
 CREATE TABLE customer(
 customer_id INT PRIMARY KEY NOT NULL,
@@ -19,5 +19,5 @@ phone_number CHAR(20));
 """)
 print('Table created in PostgreSQL')
 # Close the connection
-con.commit()
-con.close()
+engine.commit()
+engine.close()

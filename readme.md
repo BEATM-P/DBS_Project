@@ -13,7 +13,10 @@ django, djangorestframework, psycopg2-binary, postgresql
 
 -Start local database with postgres
 
+    //linux
     give yourself lock file ownership    
+    sudo chown -R pm:pm /var/run/postgresql/
+
 
     pg_ctl -D [absolutepathtorepo]/dbs-abgabe/bikes start
 
