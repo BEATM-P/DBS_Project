@@ -29,11 +29,11 @@ def parseMap(filename:str):
         fig = px.choropleth_mapbox(data_frame=geopdf,geojson=j_file,# color=,
                         #    color_continuous_scale="Viridis",
                             #range_color=(0, 12),
-                            mapbox_style="carto-positron",
+                            mapbox_style="white-bg",
                         #    zoom=3,
-                            # 
-                           # center = {"lat":387256.5658458577 , "lon": 5818552.267014929}
-                        #    opacity=0.5,
+                            featureidkey=feature.id,
+                            center = {"lat":13 , "lon": 52},
+                            opacity=1,
                         #    labels={'unemp':'unemployment rate'}
                           )
         #fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
