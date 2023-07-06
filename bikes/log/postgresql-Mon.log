@@ -135,3 +135,24 @@
 2023-07-03 17:30:59.268 CEST [20086] ERROR:  role "smoere" does not exist
 2023-07-03 17:30:59.268 CEST [20086] STATEMENT:  CREATE USER MAPPING FOR smoere SERVER bikes
 	;
+2023-07-03 17:35:17.034 CEST [8711] LOG:  starting PostgreSQL 14.8 on aarch64-apple-darwin20.6.0, compiled by Apple clang version 12.0.5 (clang-1205.0.22.9), 64-bit
+2023-07-03 17:35:17.035 CEST [8711] LOG:  listening on IPv6 address "::1", port 5432
+2023-07-03 17:35:17.035 CEST [8711] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2023-07-03 17:35:17.035 CEST [8711] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2023-07-03 17:35:17.037 CEST [8713] LOG:  database system was interrupted; last known up at 2023-07-03 15:57:19 CEST
+2023-07-03 17:35:17.069 CEST [8713] LOG:  database system was not properly shut down; automatic recovery in progress
+2023-07-03 17:35:17.070 CEST [8713] LOG:  redo starts at 0/17C6CC8
+2023-07-03 17:35:17.071 CEST [8713] LOG:  invalid record length at 0/17C7A50: wanted 24, got 0
+2023-07-03 17:35:17.071 CEST [8713] LOG:  redo done at 0/17C7A18 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2023-07-03 17:35:17.073 CEST [8711] LOG:  database system is ready to accept connections
+2023-07-03 17:35:17.133 CEST [8720] FATAL:  database "smoere" does not exist
+2023-07-03 17:35:27.269 CEST [8738] ERROR:  syntax error at or near "yes" at character 1
+2023-07-03 17:35:27.269 CEST [8738] STATEMENT:  yes
+	;
+2023-07-03 17:37:13.579 CEST [8854] FATAL:  database "smoere" does not exist
+2023-07-03 17:37:14.512 CEST [8711] LOG:  received fast shutdown request
+2023-07-03 17:37:14.512 CEST [8711] LOG:  aborting any active transactions
+2023-07-03 17:37:14.512 CEST [8738] FATAL:  terminating connection due to administrator command
+2023-07-03 17:37:14.512 CEST [8711] LOG:  background worker "logical replication launcher" (PID 8719) exited with exit code 1
+2023-07-03 17:37:14.513 CEST [8714] LOG:  shutting down
+2023-07-03 17:37:14.515 CEST [8711] LOG:  database system is shut down

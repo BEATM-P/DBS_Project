@@ -1,1 +1,1 @@
-/usr/bin/postgres "-D" "/home/pm/Uni/DBS/dbs-abgabe/bikes"
+/Applications/Postgres.app/Contents/Versions/14/bin/postgres "-D" "/Users/smoere/Documents/DBS/dbs-abgabe/bikes" "-p" "5432"
