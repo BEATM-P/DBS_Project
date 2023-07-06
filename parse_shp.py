@@ -31,26 +31,25 @@ def parseMap(filename:str):
         
         print(j_file["features"][0])
     #geopdf.to_crs("EPSG25833")
-        fig = px.choropleth_mapbox(data_frame=geopdf,geojson=j_file,#,color=,
-                        #    color_continuous_scale="Viridis",
-                            #range_color=(0, 12),
-                            mapbox_style="carto-positron",
-                        #    zoom=3,
-                            
-                            center = {"lat":13 , "lon": 52},
+        gdf = gp.GeoDataFrame.from_features(j_file)
+        point = (13, 52)
 
-                        #    labels={'unemp':'unemployment rate'}
-                          )
-        
-        fig.update_geos(showcountries=True, showcoastlines=True, projection_type="equirectangular", 
-               lataxis_showgrid=True, lonaxis_showgrid=True)
-        
-    
-        fig.update_traces(marker_line_width=1, selector=dict(type='choropleth'))
-        fig.update_geos(
-            lonaxis_range=[-180, -50],
-            lataxis_range=[0, 80]
-                )   
+        fig=px.choropleth_mapbox(center = {"lat": 13, "lon": 52}).update_layout(
+            mapbox={
+                "style": "white-bg",
+                "zoom": 16,
+                "layers": [
+                    {
+                    "source": json.loads(gdf.geometry.to_json()),
+                    "below": "traces",
+                    "type": "line",
+                    "color": "purple",
+                    "line": {"width": 1.5},
+                    }
+                    ],
+                    },
+             margin={"l": 0, "r": 0, "t": 0, "b": 0},
+            )
 
         #fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
         fig.show()
