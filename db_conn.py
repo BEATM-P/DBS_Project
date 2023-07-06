@@ -10,4 +10,4 @@ def load_db_table(config_db, query):
     data = pd.read_sql(query, con = engine)
     return data
 
-load_db_table('database.ini', 'SELECT *')
+# load_db_table('database.ini', 'SELECT *')
