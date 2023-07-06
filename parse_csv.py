@@ -15,9 +15,27 @@ cur=engine.cursor()
 
 with open(("src/Fahrraddiebstahl.csv"), encoding="latin-1") as test:
     
-    fahrraddiebstahl=pd.read_csv(test)
+    # fahrraddiebstahl=pd.read_csv(test)
 
-    fahrraddiebstahl.mask(inplac)
+    # print(fahrraddiebstahl.head(7))
+
+
+    # print(fahrraddiebstahl.columns[7])
+    # map= {"Ja":True, "Nein": False}
+
+
+    # print(fahrraddiebstahl["VERSUCH"][0])
+    # print(len(fahrraddiebstahl["VERSUCH"][0]))
+
+
+    # fahrraddiebstahl=fahrraddiebstahl.replace({"VERSUCH":map})
+    #   # fahrraddiebstahl.mask(
+    # #)
+    # print(type(fahrraddiebstahl["TATZEIT_ENDE_DATUM"][0]))
+    # print(fahrraddiebstahl.head(7))
+
+    # # fahrraddiebstahl.mask
+    # # )
 
 
     schema=str(test.readline())
@@ -25,11 +43,10 @@ with open(("src/Fahrraddiebstahl.csv"), encoding="latin-1") as test:
     (ANGELEGT_AM date,\
     TATZEIT_ANFANG_DATUM date,\
     TATZEIT_ANFANG_STUNDE int check (TATZEIT_ANFANG_STUNDE between 0 and 23), 
-    TATZEIT_ENDE_DATUM date,
-    TATZEIT_ENDE_STUNDE int check (TATZEIT_ENDE_STUNDE between 0 and 23), 
+    TATZEIT_ENDE date, 
     LOR int,
     SCHADENSHOEHE int,
-    VERSUCH char(5),
+    VERSUCH bool,
     ART_DES_FAHRRADS char(32),
     DELIKT char(32),
     ERFASSUNGSGRUND char(32)
