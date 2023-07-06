@@ -22,20 +22,36 @@ def parseMap(filename:str):
     # return tmpfile
     with open(tmpfile) as geofile:
         j_file=json.load(geofile)
+        # for feature in j_file["features"]:
+        #     feature["id"]=feature["properties"]["SCHLUESSEL"]
+        i=1
         for feature in j_file["features"]:
-            feature["id"]=feature["properties"]["SCHLUESSEL"]
+            feature ['id'] = str(i).zfill(2)
+            i += 1
+        
         print(j_file["features"][0])
     #geopdf.to_crs("EPSG25833")
-        fig = px.choropleth_mapbox(data_frame=geopdf,geojson=j_file,# color=,
+        fig = px.choropleth_mapbox(data_frame=geopdf,geojson=j_file,#,color=,
                         #    color_continuous_scale="Viridis",
                             #range_color=(0, 12),
-                            mapbox_style="white-bg",
+                            mapbox_style="carto-positron",
                         #    zoom=3,
-                            featureidkey=feature.id,
+                            
                             center = {"lat":13 , "lon": 52},
-                            opacity=1,
+
                         #    labels={'unemp':'unemployment rate'}
                           )
+        
+        fig.update_geos(showcountries=True, showcoastlines=True, projection_type="equirectangular", 
+               lataxis_showgrid=True, lonaxis_showgrid=True)
+        
+    
+        fig.update_traces(marker_line_width=1, selector=dict(type='choropleth'))
+        fig.update_geos(
+            lonaxis_range=[-180, -50],
+            lataxis_range=[0, 80]
+                )   
+
         #fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
         fig.show()
 
