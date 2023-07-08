@@ -32,11 +32,11 @@ def parseMap(filename:str):
         print(j_file["features"][0])
     #geopdf.to_crs("EPSG25833")
         gdf = gp.GeoDataFrame.from_features(j_file)
-        point = (13, 52)
+        point = 13.376727953283668, 52.51603040861022 
 
-        fig=px.choropleth_mapbox(center = {"lat": 13, "lon": 52}).update_layout(
+        fig=px.choropleth_mapbox(center = {"lat": point[1], "lon": point[0]}).update_layout(
             mapbox={
-                "style": "white-bg",
+                "style": "open-street-map",
                 "zoom": 16,
                 "layers": [
                     {
@@ -53,7 +53,7 @@ def parseMap(filename:str):
 
         #fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
         fig.show()
-
+        fig.on_click(print("CLICK EVENT"))
 
 
 
