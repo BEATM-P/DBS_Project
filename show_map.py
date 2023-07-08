@@ -37,18 +37,18 @@ print(countdf.head())
 countdf=countdf.applymap(format_numbers)
 
 
-with open("src/lor_bezirksregionen.geojson") as lor_geo:
-    lor_data = json.load(lor_geo)
-    #print(lor_data.dtype)
-    #gdf = gp.GeoDataFrame.from_features(lor_data)
-    gdf=gp.read_file("src/PLR Vector Data/lor_plr.shp")
+#with open("src/lor_bezirksregionen.geojson") as lor_geo:
+#lor_data = json.load(lor_geo)
+#print(lor_data.dtype)
+#gdf = gp.GeoDataFrame.from_features(lor_data)
+gdf=gp.read_file("src/PLR Vector Data/lor_plr.shp")
 
-    gdf.set_crs(epsg=25833, inplace=True)
-    gdf.to_crs(epsg=4326, inplace = True)
-    #gdf= gdf.set_geometry("geometry")
-    #print(gdf.head())
-    gdf.to_file("src/PARSEDGEOJSON", driver="GeoJSON",mode="w")
-    print(gdf.head())
+gdf.set_crs(epsg=25833, inplace=True)
+gdf.to_crs(epsg=4326, inplace = True)
+#gdf= gdf.set_geometry("geometry")
+#print(gdf.head())
+gdf.to_file("src/PARSEDGEOJSON", driver="GeoJSON",mode="w")
+print(gdf.head())
 
 
 
