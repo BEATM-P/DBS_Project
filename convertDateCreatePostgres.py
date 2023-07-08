@@ -31,22 +31,27 @@ fahrraddiebstahl=VersuchToBool(fahrraddiebstahl)
 engine = create_engine(
     'postgresql+psycopg2://pm:admindb@localhost:5432/bikes')
 
-fahrraddiebstahl.head(0).to_sql('table_name', engine, if_exists='replace',index=False)
-lor_planungsraeume.head(0).to_sql('lor_pl', engine, if_exists='replace',index=False)
-params = config('database.ini')
-conn = engine.raw_connection()
-cur = conn.cursor()
-output = io.StringIO()
-fahrraddiebstahl.to_csv(output, sep='\t', header=False, index=False)
-output.seek(0)
-contents = output.getvalue()
-cur.copy_from(output, 'table_name', null="") # null values become ''
+# We dont need to put the dataframes into the database manually lol
+#df.to_sql does everything
+fahrraddiebstahl.to_sql('fahrraddiebstahl', engine, if_exists='replace',index=False)    
+lor_planungsraeume.to_sql('lor_pl', engine, if_exists='replace',index=False)
 
-output = io.StringIO()
-lor_planungsraeume.to_csv(output, sep='\t', header=False, index=False)
-output.seek(0)
-cur.copy_from(output, 'lor_pl', null="") # null values become ''
 
-conn.commit()
-cur.close()
-conn.close()
+#DEPRECIATED
+# params = config('database.ini')
+# conn = engine.raw_connection()
+# cur = conn.cursor()
+# output = io.StringIO()
+# fahrraddiebstahl.to_csv(output, sep='\t', header=False, index=False)
+# output.seek(0)
+# contents = output.getvalue()
+# cur.copy_from(output, 'Fahrraddiebstahl', null="") # null values become ''
+
+# output = io.StringIO()
+# lor_planungsraeume.to_csv(output, sep='\t', header=False, index=False)
+# output.seek(0)
+# cur.copy_from(output, 'lor_pl', null="") # null values become ''
+
+# conn.commit()
+# cur.close()
+# conn.close()

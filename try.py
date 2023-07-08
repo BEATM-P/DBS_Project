@@ -16,15 +16,16 @@ cur = conn.cursor()
 # #print(params)
 # engine = psycopg2.connect(**params)
 
+
 sql = '''
         select count("LOR") , "PLR_NAME" as "BEZIRKSREG", "LOR"
-        from table_name, lor_pl
+        from fahrraddiebstahl, lor_pl
         where "LOR" = "PLR_ID"
         group by "LOR", "BEZIRKSREG"
         order by count;
 '''
-countdf = pd.read_sql_query(sql, conn)
-#print(countdf)
+countdf = pd.read_sql_query(sql, engine)        
+print(countdf['BEZIRKSREG'])
 
 with open("src/lor_bezirksregionen.geojson") as lor_geo:
     lor_data = json.load(lor_geo)
@@ -38,10 +39,11 @@ with open("src/lor_bezirksregionen.geojson") as lor_geo:
     fig = px.choropleth_mapbox(gdf, geojson = gdf.geometry, locations= countdf['BEZIRKSREG'], color= countdf['BEZIRKSREG'], 
                                         color_continuous_scale="Viridis",
                                         range_color=(1, 318),
-                                        mapbox_style= "carto-positron",
+                                        mapbox_style= "open-street-map",
                                         zoom= 9.5, center = {"lat": 52.516208190476227, "lon": 13.376648940623779},
                                         opacity = 0.5, 
-                                        labels = {'count':'Anzahl Diebstähle'}
+                                        labels = {'count':'Anzahl Diebstähle'},
+                                        featureidkey="properties.bezirksreg"
                                         )#.update_layout(
                                         # mapbox={"layers": [
                                         # {
