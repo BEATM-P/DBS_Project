@@ -17,6 +17,11 @@ def StringtoDate(df, column1, column2):
         df[column1][i] = pd.to_datetime((df[column1][i] + " " + str(df[column2][i]) + ":00"), format= '%d.%m.%Y %H:%M')
     del df[column2]
 
+#Take int and return it as string with 8 digits
+def PLRID_adjustDigits(num):
+    return f'{num:08d}'
+
+
 # Change VERSUCH column to booleans 
 def VersuchToBool(df):
     map= {"Ja":True, "Nein": False}
@@ -26,7 +31,10 @@ StringtoDate(fahrraddiebstahl, "TATZEIT_ANFANG_DATUM", "TATZEIT_ANFANG_STUNDE")
 StringtoDate(fahrraddiebstahl, "TATZEIT_ENDE_DATUM", "TATZEIT_ENDE_STUNDE")
 fahrraddiebstahl=VersuchToBool(fahrraddiebstahl)
 
-
+#delete unnecessary/ empty attributes
+lor_planungsraeume=lor_planungsraeume.drop(["Name","description","timestamp","begin","end","altitudeMode","tessellate","extrude","visibility","drawOrder","icon"], axis=1)
+#adjust PLR_ID so all of them have 8 digits
+#lor_planungsraeume["PLR_ID"]=lor_planungsraeume["PLR_ID"].map(PLRID_adjustDigits)
 # Create table in postgres with dataframe 
 engine = create_engine(
     'postgresql+psycopg2://pm:admindb@localhost:5432/bikes')

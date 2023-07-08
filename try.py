@@ -6,6 +6,13 @@ import pandas as pd
 import psycopg2
 from config import config
 from sqlalchemy import create_engine
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+
+def format_numbers(num):
+    return f'{num:08d}'
+
 
 engine = create_engine(
     'postgresql+psycopg2://pm:admindb@localhost:5432/bikes')
@@ -18,15 +25,71 @@ cur = conn.cursor()
 
 
 sql = '''
-        select count("LOR") , "PLR_NAME" as "BEZIRKSREG", "LOR"
+        select count("LOR") , "PLR_ID" as "BEZIRKSREG", "LOR"
         from fahrraddiebstahl, lor_pl
         where "LOR" = "PLR_ID"
         group by "LOR", "BEZIRKSREG"
         order by count;
 '''
 countdf = pd.read_sql_query(sql, engine)        
-print(countdf['BEZIRKSREG'])
+print(countdf.head())
 
+countdf=countdf.applymap(format_numbers)
+
+
+with open("src/lor_bezirksregionen.geojson") as lor_geo:
+    lor_data = json.load(lor_geo)
+    #print(lor_data.dtype)
+    #gdf = gp.GeoDataFrame.from_features(lor_data)
+    gdf=gp.read_file("src/PLR Vector Data/lor_plr.shp")
+
+    gdf.set_crs(epsg=25833, inplace=True)
+    gdf.to_crs(epsg=4326, inplace = True)
+    #gdf= gdf.set_geometry("geometry")
+    #print(gdf.head())
+    gdf.to_file("src/PARSEDGEOJSON", driver="GeoJSON",mode="w")
+    print(gdf.head())
+
+
+
+
+with open("src/PARSEDGEOJSON") as gjson:
+    json=json.load(gjson)
+    i=1
+    for feature in json["features"]:
+        feature ['id'] = feature["properties"]["PLR_ID"]
+        i += 1
+
+
+    trace = go.Choroplethmapbox(
+    geojson=json,  # GeoJSON data or DataFrame with geographical data
+    locations=countdf["BEZIRKSREG"],  # List of locations or region identifiers
+    z=countdf['count'],  # Values to be mapped to colors
+    colorscale='Viridis',  # Choose a colorscale
+    zmin=0,  # Set the minimum value for color mapping
+    zmax=350,  # Set the maximum value for color mapping
+    marker_opacity=0.7,  # Set the opacity of the markers
+    marker_line_width=1,  # Set the width of marker lines
+    colorbar=dict(title='Colorbar Title'),
+)
+
+    layout = go.Layout(
+    mapbox_style='carto-positron',  # Choose a mapbox style
+    mapbox_zoom=3,  # Set the initial zoom level
+    mapbox_center= {"lat": 52.516208190476227, "lon": 13.376648940623779},  # Set the initial center of the map
+)
+
+
+    fig = go.Figure(data=trace, layout=layout)
+
+
+    fig.show()
+
+
+
+
+
+"""
 with open("src/lor_bezirksregionen.geojson") as lor_geo:
     lor_data = json.load(lor_geo)
     #print(lor_data.dtype)
@@ -168,3 +231,4 @@ conn.close()
 #     parseMap(("src/PLR Vector Data/Planungsraum_EPSG_25833.shp"))
 
 # engine.close()
+"""
