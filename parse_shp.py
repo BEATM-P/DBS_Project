@@ -34,10 +34,10 @@ def parseMap(filename:str):
         gdf = gp.GeoDataFrame.from_features(j_file)
         point = (13, 52)
 
-        fig=px.choropleth_mapbox(center = {"lat": 13, "lon": 52}).update_layout(
+        fig=px.choropleth_mapbox(center = {"lat": 52.516208190476227, "lon": 13.376648940623779}).update_layout(
             mapbox={
                 "style": "white-bg",
-                "zoom": 16,
+                "zoom": 9.5,
                 "layers": [
                     {
                     "source": json.loads(gdf.geometry.to_json()),
