@@ -14,9 +14,6 @@ def format_numbers(num):
     else:
         return num
 
-#token = open(".mapbox_token").read() # you will need your own token
-
-
 app = Dash(__name__)
 
 app.layout = html.Div([
@@ -41,9 +38,7 @@ def create_map(candidate):
     params = config('database.ini')
     conn = engine.raw_connection()
     cur = conn.cursor()
-    # params = config(config_db = 'database.ini')
-    # #print(params)
-    # engine = psycopg2.connect(**params)
+
 
 
     sql = '''
@@ -59,17 +54,11 @@ def create_map(candidate):
 
     countdf=countdf.applymap(format_numbers)
 
-
-    #with open("src/lor_bezirksregionen.geojson") as lor_geo:
-    #lor_data = json.load(lor_geo)
-    #print(lor_data.dtype)
-    #gdf = gp.GeoDataFrame.from_features(lor_data)
     gdf=gp.read_file("src/PLR Vector Data/lor_plr.shp")
 
     gdf.set_crs(epsg=25833, inplace=True)
     gdf.to_crs(epsg=4326, inplace = True)
-    #gdf= gdf.set_geometry("geometry")
-    #print(gdf.head())
+
     gdf.to_file("src/PARSEDGEOJSON", driver="GeoJSON",mode="w")
     print(gdf.head())
 
