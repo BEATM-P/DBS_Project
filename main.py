@@ -8,6 +8,10 @@ import json
 import geopandas as gp
 import pandas as pd
 
+from sqlGenerator import SQLGenerator
+
+sql=SQLGenerator()
+
 engine = create_engine(
     'postgresql+psycopg2://pm:admindb@localhost:5432/bikes')
 conn = engine.raw_connection()
@@ -68,20 +72,20 @@ app.layout = html.Div([
     Input("ArtdesFahrrads", "value"),
     Input("Versuch", "value"))
 def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch):
-    #update_handler(Bezirk,ArtdesFahrrads, Tageszeit, Versuch)
-    sql = '''
-            select count("LOR"), "PLR_NAME", "PLR_ID", "LOR", "Gemeinde_name"
-            from fahrraddiebstahl, lor_pl, bezirksgrenzen
-            where "LOR" = "PLR_ID"
-            and "Gemeinde_schluessel" = "BEZ"
-            group by "LOR", "PLR_ID", "PLR_NAME", "Gemeinde_name"
-            ;
-    '''
-    countdf = pd.read_sql_query(sql, conn)        
+    query=sql.update_handler(Bezirk,ArtdesFahrrads, Tageszeit, Versuch)
+    # sql = '''
+    #         select count("LOR"), "PLR_NAME", "PLR_ID", "LOR", "Gemeinde_name"
+    #         from fahrraddiebstahl, lor_pl, bezirksgrenzen
+    #         where "LOR" = "PLR_ID"
+    #         and "Gemeinde_schluessel" = "BEZ"
+    #         group by "LOR", "PLR_ID", "PLR_NAME", "Gemeinde_name"
+    #         ;
+    # '''
+    countdf = pd.read_sql_query(query, conn)        
 
     countdf=countdf.applymap(format_numbers)
 
-
+    print(countdf.head())
 
     trace = go.Choroplethmapbox(
         geojson=jon,  # GeoJSON data or DataFrame with geographical data
@@ -95,7 +99,7 @@ def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch):
         colorbar=dict(title='Anzahl Diebstähle'), # Set title of bar on the right
         hoverinfo="none", 
         customdata=countdf,
-        hovertemplate="Bezirk: %{customdata[4]}"+"<br>Planungsraum: %{customdata[1]}"+"<br>Fahrraddiebstähle: %{z}"
+        hovertemplate="Bezirk: %{customdata[3]}"+"<br>Planungsraum: %{customdata[1]}"+"<br>Fahrraddiebstähle: %{z}"
         )
 
     layout = go.Layout(

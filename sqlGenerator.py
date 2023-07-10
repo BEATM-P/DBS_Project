@@ -1,10 +1,10 @@
 class SQLGenerator:
     def __init__(self) -> None:
-        self.sqls={"select": ['"PLR_ID"','"PLR_NAME"','"Gemeinde_name"'],
+        self.sqls={"select": ['count("LOR")','"PLR_ID"','"PLR_NAME"','"Gemeinde_name"'],
                 "from": ['"lor_pl"', '"fahrraddiebstahl"', '"bezirksgrenzen"'],
                 "joins":['"LOR" = "PLR_ID"', '"Gemeinde_schluessel" = "BEZ"'],
                 "cond": {"bezirke":set(), "types":set(), "showVersuch":True, "ShowSuccess":True, "starttime":None, "endtime": None}}
-        
+
 
     def update_handler(self, Bezirk,ArtdesFahrrads, Tageszeit, Versuch):
         
@@ -32,7 +32,7 @@ class SQLGenerator:
         strq+=("\nWHERE ")
         strq+='\n AND '.join(self.sqls["joins"])
         if self.sqls["cond"]["bezirke"]!=set():
-            strq+="\n AND ()"
+            strq+="\n AND ("
             for i in self.sqls["cond"]["bezirke"]:
                 strq+=f'"Gemeinde_name"= \'{i}\' OR '
             strq+=f'"Gemeinde_name"= \'DUMMY VALUE\')'
@@ -41,9 +41,11 @@ class SQLGenerator:
             for i in self.sqls["cond"]["types"]:
                 strq+=f'"ART_DES_FAHRRADS"= \'{i}\' OR '
             strq+=f'"ART_DES_FAHRRADS"= \'DUMMY VALUE\')'
+        strq+="\n GROUP BY"
+        strq+=" , ".join(self.sqls["select"][1:])
 
         print(strq)
-        return strq
+        return strq+";"
 
 
     def tageszeit(self, tag=None, nacht=None):
