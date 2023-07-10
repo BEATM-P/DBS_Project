@@ -21,8 +21,7 @@ bezirksgrenzen      = bezirksgrenzen.drop(["gml_id", "Land_name", "Land_schluess
 def StringtoDate(df, column1, column2):
     for i in range(len(df[column1])):
         df[column1][i] = pd.to_datetime((df[column1][i] + " " + str(df[column2][i]) + ":00"), format= '%d.%m.%Y %H:%M')
-    del df[column2]
-
+        df[column2][i] = str(df[column2][i])+":00"
 #Take int and return it as string with 8 digits
 def PLRID_adjustDigits(num):
     return f'{num:08d}'
