@@ -32,15 +32,15 @@ class SQLGenerator:
         strq+=("\nWHERE ")
         strq+='\n AND '.join(self.sqls["joins"])
         if self.sqls["cond"]["bezirke"]!=set():
-            strq+="\n AND "
+            strq+="\n AND ()"
             for i in self.sqls["cond"]["bezirke"]:
-                strq+=f'"Gemeinde_name"= \'{i}\' OR'
-            strq+=f'"Gemeinde_name"= \'DUMMY VALUE\''
+                strq+=f'"Gemeinde_name"= \'{i}\' OR '
+            strq+=f'"Gemeinde_name"= \'DUMMY VALUE\')'
         if self.sqls["cond"]["types"]!=set():
-            strq+="\n AND "
+            strq+="\n AND ("
             for i in self.sqls["cond"]["types"]:
-                strq+=f'"ART_DES_FAHRRADS"= \'{i}\' OR'
-            strq+=f'"ART_DES_FAHRRADS"= \'DUMMY VALUE\''
+                strq+=f'"ART_DES_FAHRRADS"= \'{i}\' OR '
+            strq+=f'"ART_DES_FAHRRADS"= \'DUMMY VALUE\')'
 
         print(strq)
         return strq
