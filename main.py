@@ -17,15 +17,15 @@ def format_numbers(num):
 app = Dash(__name__)
 
 app.layout = html.Div([
-    html.H4('Polotical candidate voting pool analysis'),
-    html.P("Select a candidate:"),
+    html.H4('Fahrraddiebstahl in Berlin'),
+    html.P("Filter:"),
     dcc.RadioItems(
         id='candidate', 
-        options=["Joly", "Coderre", "Bergeron"],
-        value="Coderre",
+        options=["Tag", "Nacht", "Beide"],
+        value="Beide",
         inline=True
     ),
-    dcc.Graph(id="graph"),
+    dcc.Graph(id="graph", animate=True ),
 ])
 
 
@@ -91,7 +91,7 @@ def create_map(candidate):
         layout = go.Layout(
         mapbox_style='white-bg',#'carto-positron',  # Choose a mapbox style
         mapbox_zoom=9.3,  # Set the initial zoom level
-        mapbox_center= {"lat": 52.516208190476227, "lon": 13.376648940623779},  # Set the initial center of the map
+        mapbox_center= {"lat": 52.516208190476227, "lon": 13.376648940623779}  # Set the initial center of the map
     )
 
 
