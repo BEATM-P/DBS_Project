@@ -8,6 +8,24 @@ import json
 import geopandas as gp
 import pandas as pd
 
+engine = create_engine(
+    'postgresql+psycopg2://pm:admindb@localhost:5432/bikes')
+conn = engine.raw_connection()
+
+gdf=gp.read_file("src/PLR Vector Data/lor_plr.shp")
+
+gdf.set_crs(epsg=25833, inplace=True)
+gdf.to_crs(epsg=4326, inplace = True)
+
+gdf.to_file("src/PARSEDGEOJSON", driver="GeoJSON",mode="w")
+
+gjson=open("src/PARSEDGEOJSON")
+jon=json.load(gjson)
+i=1
+for feature in jon["features"]:
+        feature ['id'] = feature["properties"]["PLR_ID"]
+        i += 1
+
 def format_numbers(num):
     if type(num)==int:
         return f'{num:08d}'
@@ -39,13 +57,7 @@ app.layout = html.Div([
         placeholder='Art des Fahrrads',
         id='ArtdesFahrrads'),
 
-    # dcc.RadioItems(
-    #     id='candidate', 
-    #     options=["Tag", "Nacht", "Beide"],
-    #     value="Beide",
-    #     inline=True
-    #),
-    dcc.Graph(id="graph", animate=True, style={'width': '90vw', 'height': '90vh'} ),
+    dcc.Graph(id="graph", style={'width': '90vw', 'height': '90vh'} ),
 ])
 
 
@@ -56,16 +68,7 @@ app.layout = html.Div([
     Input("ArtdesFahrrads", "value"),
     Input("Versuch", "value"))
 def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch):
-    print(Bezirk,ArtdesFahrrads, Tageszeit, Versuch)
-    engine = create_engine(
-        'postgresql+psycopg2://pm:admindb@localhost:5432/bikes')
-    params = config('database.ini')
-    conn = engine.raw_connection()
-    cur = conn.cursor()
-    
-
-
-
+    #update_handler(Bezirk,ArtdesFahrrads, Tageszeit, Versuch)
     sql = '''
             select count("LOR"), "PLR_NAME", "PLR_ID", "LOR", "Gemeinde_name"
             from fahrraddiebstahl, lor_pl, bezirksgrenzen
@@ -75,30 +78,12 @@ def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch):
             ;
     '''
     countdf = pd.read_sql_query(sql, conn)        
-    #print(countdf.head())
 
     countdf=countdf.applymap(format_numbers)
 
-    gdf=gp.read_file("src/PLR Vector Data/lor_plr.shp")
-
-    gdf.set_crs(epsg=25833, inplace=True)
-    gdf.to_crs(epsg=4326, inplace = True)
-
-    gdf.to_file("src/PARSEDGEOJSON", driver="GeoJSON",mode="w")
-    #print(gdf.head())
 
 
-
-
-    with open("src/PARSEDGEOJSON") as gjson:
-        jon=json.load(gjson)
-        i=1
-        for feature in jon["features"]:
-            feature ['id'] = feature["properties"]["PLR_ID"]
-            i += 1
-
-        bez = countdf["Gemeinde_name"].to_list()
-        trace = go.Choroplethmapbox(
+    trace = go.Choroplethmapbox(
         geojson=jon,  # GeoJSON data or DataFrame with geographical data
         locations=countdf["PLR_ID"],  # List of locations or region identifiers
         z=countdf['count'],  # Values to be mapped to colors
@@ -107,21 +92,21 @@ def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch):
         zmax=350,  # Set the maximum value for color mapping
         marker_opacity=0.7,  # Set the opacity of the markers
         marker_line_width=1,  # Set the width of marker lines
-        colorbar=dict(title='Anzahl Diebstähle'),
+        colorbar=dict(title='Anzahl Diebstähle'), # Set title of bar on the right
         hoverinfo="none", 
         customdata=countdf,
         hovertemplate="Bezirk: %{customdata[4]}"+"<br>Planungsraum: %{customdata[1]}"+"<br>Fahrraddiebstähle: %{z}"
-    )
+        )
 
-        layout = go.Layout(
+    layout = go.Layout(
         mapbox_style='white-bg',#'carto-positron',  # Choose a mapbox style
         mapbox_zoom=9,  # Set the initial zoom level
         mapbox_center= {"lat": 52.516208190476227, "lon": 13.376648940623779}  # Set the initial center of the map
-    )
+        )
 
 
-        fig = go.Figure(data=trace, layout=layout)
-        return fig
+    fig = go.Figure(data=trace, layout=layout)
+    return fig
 
 
-app.run_server(debug=True)
+app.run(debug=True)
