@@ -33,7 +33,7 @@ sql = '''
         group by "LOR", "PLR_ID", "PLR_NAME"
         order by count;
 '''
-countdf = pd.read_sql_query(sql, engine)        
+countdf = pd.read_sql_query(sql, conn)        
 print(countdf.head())
 
 countdf=countdf.applymap(format_numbers)
@@ -79,7 +79,7 @@ with open("src/PARSEDGEOJSON") as gjson:
 )
 
     layout = go.Layout(
-    mapbox_style='carto-positron',  # Choose a mapbox style
+    mapbox_style='white-bg',#'carto-positron',  # Choose a mapbox style
     mapbox_zoom=10,  # Set the initial zoom level
     mapbox_center= {"lat": 52.516208190476227, "lon": 13.376648940623779},  # Set the initial center of the map
 )
