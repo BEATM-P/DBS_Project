@@ -18,6 +18,8 @@ class SQLGenerator:
         for i in self.sqls["cond"]["types"]:
            strq+=f'\n AND "ART_DES_FAHRRADS"= {i}'
         print(strq)
+        return strq
+
 
     def add_time(self, starttime=None, endtime=None):
         if starttime==None and endtime==None:
