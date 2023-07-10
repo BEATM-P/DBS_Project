@@ -19,25 +19,50 @@ app = Dash(__name__)
 app.layout = html.Div([
     html.H4('Fahrraddiebstahl in Berlin'),
     html.P("Filter:"),
-    dcc.RadioItems(
-        id='candidate', 
-        options=["Tag", "Nacht", "Beide"],
-        value="Beide",
-        inline=True
-    ),
-    dcc.Graph(id="graph", animate=True ),
+    
+    dcc.Checklist(
+        ['Tag', 'Nacht'],
+        inline=True,
+        id='Tageszeit'),
+    dcc.Checklist(
+        ['Versuchter Diebstahl', 'Erfolgreicher Diebstahl'],
+        inline=True,
+        id='Versuch'),
+    dcc.Dropdown(
+        ['Reinickendorf', 'Charlottenburg-Wilmersdorf', 'Treptow-Köpenick', 'Pankow', 'Neukölln', 'Lichtenberg', 'Marzahn-Hellersdorf', 'Spandau', 'Steglitz-Zehlendorf', 'Mitte', 'Friedrichshain-Kreuzberg', 'Tempelhof-Schöneberg'],
+        multi=True,
+        placeholder= 'Bezirk',
+        id = 'Bezirk'),
+    dcc.Dropdown(
+        ['Damenfahrrad', 'Lastenfahrrad', 'Fahrrad', 'Herrenfahrrad', 'diverse Fahrräder', 'Kinderfahrrad', 'Mountainbike', 'Rennrad'],
+        multi=True,
+        placeholder='Art des Fahrrads',
+        id='ArtdesFahrrads'),
+
+    # dcc.RadioItems(
+    #     id='candidate', 
+    #     options=["Tag", "Nacht", "Beide"],
+    #     value="Beide",
+    #     inline=True
+    #),
+    dcc.Graph(id="graph", animate=True, style={'width': '90vw', 'height': '90vh'} ),
 ])
 
 
 @app.callback(
     Output("graph", "figure"), 
-    Input("candidate", "value"))
-def create_map(candidate):
+    Input("Bezirk", "value"),
+    Input("Tageszeit", "value"),
+    Input("ArtdesFahrrads", "value"),
+    Input("Versuch", "value"))
+def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch):
+    print(Bezirk,ArtdesFahrrads, Tageszeit, Versuch)
     engine = create_engine(
         'postgresql+psycopg2://pm:admindb@localhost:5432/bikes')
     params = config('database.ini')
     conn = engine.raw_connection()
     cur = conn.cursor()
+    
 
 
 
@@ -50,7 +75,7 @@ def create_map(candidate):
             ;
     '''
     countdf = pd.read_sql_query(sql, conn)        
-    print(countdf.head())
+    #print(countdf.head())
 
     countdf=countdf.applymap(format_numbers)
 
@@ -60,7 +85,7 @@ def create_map(candidate):
     gdf.to_crs(epsg=4326, inplace = True)
 
     gdf.to_file("src/PARSEDGEOJSON", driver="GeoJSON",mode="w")
-    print(gdf.head())
+    #print(gdf.head())
 
 
 
@@ -82,7 +107,7 @@ def create_map(candidate):
         zmax=350,  # Set the maximum value for color mapping
         marker_opacity=0.7,  # Set the opacity of the markers
         marker_line_width=1,  # Set the width of marker lines
-        colorbar=dict(title='Colorbar Title'),
+        colorbar=dict(title='Anzahl Diebstähle'),
         hoverinfo="none", 
         customdata=countdf,
         hovertemplate="Bezirk: %{customdata[4]}"+"<br>Planungsraum: %{customdata[1]}"+"<br>Fahrraddiebstähle: %{z}"
@@ -90,13 +115,12 @@ def create_map(candidate):
 
         layout = go.Layout(
         mapbox_style='white-bg',#'carto-positron',  # Choose a mapbox style
-        mapbox_zoom=9.3,  # Set the initial zoom level
+        mapbox_zoom=9,  # Set the initial zoom level
         mapbox_center= {"lat": 52.516208190476227, "lon": 13.376648940623779}  # Set the initial center of the map
     )
 
 
         fig = go.Figure(data=trace, layout=layout)
-
         return fig
 
 
