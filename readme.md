@@ -13,14 +13,29 @@ django, djangorestframework, psycopg2-binary, postgresql
 
 -Start local database with postgres
 
-    //linux
-    give yourself lock file ownership    
+#### Linux
+
+Initialize Database
+
+    initdb /home/alla/Uni/dbs-abgabe/bikes 
+
+give yourself lock file ownership
+
     sudo chown -R pm:pm /var/run/postgresql/
 
+start database server
 
     pg_ctl -D [absolutepathtorepo]/dbs-abgabe/bikes start
 
-    psql bikes //check if it worked
+open psql interactive shell
+
+    psql postgres
+
+Create Database for app to use
+
+    CREATE DATABASE bikes;
+
+Exit with Ctrl+D
 
 -Run importcsv.py to initialise database with csv data
 
