@@ -27,11 +27,12 @@ cur = conn.cursor()
 
 
 sql = '''
-        select count("LOR") ,"PLR_NAME", "PLR_ID", "LOR"
-        from fahrraddiebstahl, lor_pl
+        select count("LOR"), "PLR_NAME", "PLR_ID", "LOR", "Gemeinde_name"
+        from fahrraddiebstahl, lor_pl, bezirksgrenzen
         where "LOR" = "PLR_ID"
-        group by "LOR", "PLR_ID", "PLR_NAME"
-        order by count;
+        and "Gemeinde_schluessel" = "BEZ"
+        group by "LOR", "PLR_ID", "PLR_NAME", "Gemeinde_name"
+        ;
 '''
 countdf = pd.read_sql_query(sql, conn)        
 print(countdf.head())
@@ -62,7 +63,7 @@ with open("src/PARSEDGEOJSON") as gjson:
         feature ['id'] = feature["properties"]["PLR_ID"]
         i += 1
 
-
+    bez = countdf["Gemeinde_name"].to_list()
     trace = go.Choroplethmapbox(
     geojson=json,  # GeoJSON data or DataFrame with geographical data
     locations=countdf["PLR_ID"],  # List of locations or region identifiers
@@ -74,13 +75,13 @@ with open("src/PARSEDGEOJSON") as gjson:
     marker_line_width=1,  # Set the width of marker lines
     colorbar=dict(title='Colorbar Title'),
     hoverinfo="none", 
-    text=countdf["PLR_NAME"].to_list(),
-    hovertemplate="Planungsraum: %{text}"+"<br>Fahrraddiebstähle: %{z}"
+    customdata=countdf,
+    hovertemplate="Bezirk: %{customdata[4]}"+"<br>Planungsraum: %{customdata[1]}"+"<br>Fahrraddiebstähle: %{z}"
 )
 
     layout = go.Layout(
     mapbox_style='white-bg',#'carto-positron',  # Choose a mapbox style
-    mapbox_zoom=10,  # Set the initial zoom level
+    mapbox_zoom=9.3,  # Set the initial zoom level
     mapbox_center= {"lat": 52.516208190476227, "lon": 13.376648940623779},  # Set the initial center of the map
 )
 
