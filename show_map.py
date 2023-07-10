@@ -59,15 +59,15 @@ def create_map():
 
 
     with open("src/PARSEDGEOJSON") as gjson:
-        json=json.load(gjson)
+        jon=json.load(gjson)
         i=1
-        for feature in json["features"]:
+        for feature in jon["features"]:
             feature ['id'] = feature["properties"]["PLR_ID"]
             i += 1
 
         bez = countdf["Gemeinde_name"].to_list()
         trace = go.Choroplethmapbox(
-        geojson=json,  # GeoJSON data or DataFrame with geographical data
+        geojson=jon,  # GeoJSON data or DataFrame with geographical data
         locations=countdf["PLR_ID"],  # List of locations or region identifiers
         z=countdf['count'],  # Values to be mapped to colors
         colorscale=[[0, 'rgb(255,255,255)'],[1, 'rgb(255,0,0)']],  # Choose a colorscale
@@ -90,7 +90,7 @@ def create_map():
 
         fig = go.Figure(data=trace, layout=layout)
 
-        return fig.to_dict()
+        return fig
 
 #fig.show()
 
