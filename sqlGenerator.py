@@ -7,13 +7,16 @@ class SQLGenerator:
         
 
     def update_handler(self, Bezirk,ArtdesFahrrads, Tageszeit, Versuch):
-        self.sqls["cond"]["bezirke"]=set(Bezirk)
-
-        self.sqls["cond"]["types"]=set(ArtdesFahrrads)
-
-        self.versuch("Versuchter Diebstahl"in Versuch, "Erfolgreicher Diebstahl" in Versuch)        
         
-        self.tageszeit("Tag"in Tageszeit, "Nacht"in Tageszeit)
+        if Bezirk!=None:
+            self.sqls["cond"]["bezirke"]=set(Bezirk)
+        if ArtdesFahrrads!=None:
+            self.sqls["cond"]["types"]=set(ArtdesFahrrads)
+
+        if Versuch!=None:
+            self.versuch("Versuchter Diebstahl"in Versuch, "Erfolgreicher Diebstahl" in Versuch)        
+        if Tageszeit!=None:
+            self.tageszeit("Tag"in Tageszeit, "Nacht"in Tageszeit)
 
         return self.construct_sql()
      
