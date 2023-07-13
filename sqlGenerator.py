@@ -59,10 +59,10 @@ class SQLGenerator:
         
         #VERSUCH?
         if self.sqls["cond"]["showVersuch"]==False:
-            strq+=f'\n AND \"VERSUCH\"=\'TRUE\''
+            strq+=f'\n AND \"VERSUCH\"=\'false\''
         if self.sqls["cond"]["showSuccess"]==False:
-            strq+=f'\n AND \"VERSUCH\"=\'FALSE\''
-        
+            strq+=f'\n AND \"VERSUCH\"=\'true\''
+
         strq+="\n GROUP BY"
         strq+=" , ".join(self.sqls["select"][1:])
 
@@ -106,9 +106,9 @@ class SQLGenerator:
         if showVersuch==None and showSuccess==None:
             print("Who called this function without input?")
             return
-        elif showVersuch!=None:
+        if showVersuch!=None:
             self.sqls["cond"]["showVersuch"]=showVersuch
-        elif showSuccess!=None:
+        if showSuccess!=None:
             self.sqls["cond"]["showSuccess"]=showSuccess
 
 
