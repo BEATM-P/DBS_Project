@@ -3,40 +3,36 @@
 
 ## Setup
 
-### Requirements
+### Linux
 
-todo create requirements.txt
+- install dependencies (consider doing this in a venv)
 
-django, djangorestframework, psycopg2-binary, postgresql
+        pip install -r requriements.txt
 
-### Setting up
+- install postgres for your platform
 
--Start local database with postgres
+- Initialize Database
 
-#### Linux
+        initdb /home/alla/Uni/dbs-abgabe/bikes
 
-Initialize Database
+- give yourself lock file ownership
 
-    initdb /home/alla/Uni/dbs-abgabe/bikes 
+        sudo chown -R pm:pm /var/run/postgresql/
 
-give yourself lock file ownership
+- start database server
 
-    sudo chown -R pm:pm /var/run/postgresql/
+        pg_ctl -D [absolutepathtorepo]/dbs-abgabe/bikes start
 
-start database server
+- open psql interactive shell
 
-    pg_ctl -D [absolutepathtorepo]/dbs-abgabe/bikes start
+        psql postgres
 
-open psql interactive shell
+- Create Database for app to use
 
-    psql postgres
+        CREATE DATABASE bikes;
 
-Create Database for app to use
+- Exit with Ctrl+D
 
-    CREATE DATABASE bikes;
+- Run init_database.py to initialise database with csv data
 
-Exit with Ctrl+D
-
--Run importcsv.py to initialise database with csv data
-
--Run django server
+- Run main.py, which starts the Dash server

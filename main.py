@@ -65,13 +65,19 @@ app.layout = html.Div([
         placeholder= 'Bezirk',
         id = 'Bezirk'),
     dcc.Dropdown(
+        ['open-street-map', 'white-bg'],
+        multi=False,
+        placeholder= 'Map Style',
+        id = 'style'),
+    
+    dcc.Dropdown(
         ['Damenfahrrad', 'Lastenfahrrad', 'Fahrrad', 'Herrenfahrrad', 'diverse Fahrräder', 'Kinderfahrrad', 'Mountainbike', 'Rennrad'],
         multi=True,
         placeholder='Art des Fahrrads',
         id='ArtdesFahrrads'),
 
     dcc.Graph(id="graph", style={'width': '90vw', 'height': '90vh'} ),
-    html.P("Data provided by Amt für Statistik Berlin-Brandenburg")
+    html.P("Map data provided by \"Amt für Statistik Berlin-Brandenburg\"")
 ])
 
 
@@ -82,8 +88,9 @@ app.layout = html.Div([
     Input("ArtdesFahrrads", "value"),
     Input("Versuch", "value"),
     Input("Datum", "start_date"),
-    Input("Datum", "end_date"))
-def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch, startDatum, endDatum):
+    Input("Datum", "end_date"),
+    Input("style","value"))
+def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch, startDatum, endDatum, style):
     print(startDatum, endDatum)
     query=sql.update_handler(Bezirk,ArtdesFahrrads, Tageszeit, Versuch, startDatum, endDatum)
     # sql = '''
@@ -114,9 +121,13 @@ def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch, startDatum, endDatum)
         customdata=countdf,
         hovertemplate="Bezirk: %{customdata[3]}"+"<br>Planungsraum: %{customdata[2]}"+"<br>Fahrraddiebstähle: %{z}"
         )
-
+    if style==None:
+        style="open-street-map"
+    print("\n")
+    print(style)
+    print("\n")
     layout = go.Layout(
-        mapbox_style='open-street-map',#'carto-positron',  # Choose a mapbox style
+        mapbox_style=style,#'carto-positron',  # Choose a mapbox style
         mapbox_zoom=9,  # Set the initial zoom level
         mapbox_center= {"lat": 52.516208190476227, "lon": 13.376648940623779}  # Set the initial center of the map
         )
