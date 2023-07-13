@@ -4,7 +4,7 @@ class SQLGenerator:
         self.sqls={"select": ['count("LOR")','"PLR_ID"','"PLR_NAME"','"Gemeinde_name"'],
                 "from": ['"lor_pl"', '"fahrraddiebstahl"', '"bezirksgrenzen"'],
                 "joins":['"LOR" = "PLR_ID"', '"Gemeinde_schluessel" = "BEZ"'],
-                "cond": {"bezirke":set(), "types":set(), "showVersuch":True, "showSuccess":True, "starttime":None, "endtime": None}}
+                "cond": {"bezirke":set(), "types":set(), "showVersuch":True, "showSuccess":True, "time":None}}
 
 
     def update_handler(self, Bezirk,ArtdesFahrrads, Tageszeit, Versuch, startDatum, endDatum):
@@ -57,11 +57,19 @@ class SQLGenerator:
         if self.sqls["cond"]["endDatum"]!=None:
             strq+= f'\n AND \"TATZEIT_ENDE_DATUM\" <= \'{self.sqls["cond"]["endDatum"]}\''            
         
-        #VERSUCH?
-        if self.sqls["cond"]["showVersuch"]==False:
-            strq+=f'\n AND \"VERSUCH\"=\'false\''
-        if self.sqls["cond"]["showSuccess"]==False:
-            strq+=f'\n AND \"VERSUCH\"=\'true\''
+        #VERSUCH
+        if not self.sqls["cond"]["showVersuch"]==self.sqls["cond"]["showSuccess"]:
+            if self.sqls["cond"]["showVersuch"]==False:
+                strq+=f'\n AND \"VERSUCH\"=\'false\''
+            if self.sqls["cond"]["showSuccess"]==False:
+                strq+=f'\n AND \"VERSUCH\"=\'true\''
+
+        #TIME
+        if self.sqls["cond"]["time"]=="tag":
+            strq+=f'\n AND (\"TATZEIT_ANFANG_STUNDE\" >= \'06:00\' AND \"TATZEIT_ANFANG_STUNDE\" <= \'22:00\')'
+        elif self.sqls["cond"]["time"]=="nacht":
+            strq+=f'\n AND (\"TATZEIT_ANFANG_STUNDE\" <= \'06:00\' OR \"TATZEIT_ANFANG_STUNDE\" >= \'22:00\')'
+
 
         strq+="\n GROUP BY"
         strq+=" , ".join(self.sqls["select"][1:])
@@ -71,7 +79,15 @@ class SQLGenerator:
 
 
     def tageszeit(self, tag=None, nacht=None):
-        pass
+        if tag == nacht:
+            self.sqls["cond"]["time"]=None
+        if tag==True and nacht==False:
+            self.sqls["cond"]["time"]="tag"
+
+        if tag==False and nacht==True:
+            self.sqls["cond"]["time"]="nacht"
+
+
 
     def add_time(self, starttime=None, endtime=None):
         if starttime==None and endtime==None:
