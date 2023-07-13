@@ -1,3 +1,4 @@
+from datetime import date
 from dash import Dash, dcc, html, Input, Output
 import plotly.express as px
 from config import config
@@ -42,6 +43,14 @@ app.layout = html.Div([
     html.H4('Fahrraddiebstahl in Berlin'),
     html.P("Filter:"),
     
+    dcc.DatePickerRange(
+        display_format=("DD/MM/YYYY"),
+        min_date_allowed=date(2022, 1, 1),
+        max_date_allowed=date(2023, 6, 10),
+        initial_visible_month=date(2023, 6, 10),
+        end_date=date(2023, 6, 10),
+        start_date=date(2022,1,1),
+        id='Datum'),
     dcc.Checklist(
         ['Tag', 'Nacht'],
         inline=True,
@@ -70,8 +79,11 @@ app.layout = html.Div([
     Input("Bezirk", "value"),
     Input("Tageszeit", "value"),
     Input("ArtdesFahrrads", "value"),
-    Input("Versuch", "value"))
-def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch):
+    Input("Versuch", "value"),
+    Input("Datum", "start_date"),
+    Input("Datum", "end_date"))
+def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch, startDatum, endDatum):
+    print(startDatum, endDatum)
     query=sql.update_handler(Bezirk,ArtdesFahrrads, Tageszeit, Versuch)
     # sql = '''
     #         select count("LOR"), "PLR_NAME", "PLR_ID", "LOR", "Gemeinde_name"
@@ -99,7 +111,7 @@ def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch):
         colorbar=dict(title='Anzahl Diebstähle'), # Set title of bar on the right
         hoverinfo="none", 
         customdata=countdf,
-        hovertemplate="Bezirk: %{customdata[3]}"+"<br>Planungsraum: %{customdata[1]}"+"<br>Fahrraddiebstähle: %{z}"
+        hovertemplate="Bezirk: %{customdata[3]}"+"<br>Planungsraum: %{customdata[2]}"+"<br>Fahrraddiebstähle: %{z}"
         )
 
     layout = go.Layout(
