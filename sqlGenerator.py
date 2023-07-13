@@ -1,4 +1,3 @@
-from datetime import datetime, date, time
 class SQLGenerator:
     def __init__(self) -> None:
         self.sqls={"select": ['count("LOR")','"PLR_ID"','"PLR_NAME"','"Gemeinde_name"'],

@@ -1,10 +1,7 @@
 from datetime import date
 from dash import Dash, dcc, html, Input, Output
-import plotly.express as px
-from config import config
 from sqlalchemy import create_engine
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 import json
 import geopandas as gp
 import pandas as pd
@@ -93,15 +90,8 @@ app.layout = html.Div([
 def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch, startDatum, endDatum, style):
     print(startDatum, endDatum)
     query=sql.update_handler(Bezirk,ArtdesFahrrads, Tageszeit, Versuch, startDatum, endDatum)
-    # sql = '''
-    #         select count("LOR"), "PLR_NAME", "PLR_ID", "LOR", "Gemeinde_name"
-    #         from fahrraddiebstahl, lor_pl, bezirksgrenzen
-    #         where "LOR" = "PLR_ID"
-    #         and "Gemeinde_schluessel" = "BEZ"
-    #         group by "LOR", "PLR_ID", "PLR_NAME", "Gemeinde_name"
-    #         ;
-    # '''
-    countdf = pd.read_sql_query(query, conn)        
+
+    countdf = pd.read_sql_query(query, conn)       # Create dataframe with Query 
 
     countdf=countdf.applymap(format_numbers)
 
