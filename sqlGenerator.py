@@ -2,8 +2,8 @@ from datetime import datetime, date, time
 class SQLGenerator:
     def __init__(self) -> None:
         self.sqls={"select": ['count("LOR")','"PLR_ID"','"PLR_NAME"','"Gemeinde_name"'],
-                "from": ['"lor_pl"', '"fahrraddiebstahl"', '"bezirksgrenzen"'],
-                "joins":['"LOR" = "PLR_ID"', '"Gemeinde_schluessel" = "BEZ"'],
+                "from": ['"lor_pl"', '"fahrraddiebstahl"'],
+                "joins":['"LOR" = "PLR_ID"'],
                 "cond": {"bezirke":set(), "types":set(), "showVersuch":True, "showSuccess":True, "time":None}}
 
 
