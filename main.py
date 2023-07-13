@@ -71,6 +71,7 @@ app.layout = html.Div([
         id='ArtdesFahrrads'),
 
     dcc.Graph(id="graph", style={'width': '90vw', 'height': '90vh'} ),
+    html.P("Data provided by Amt für Statistik Berlin-Brandenburg")
 ])
 
 
@@ -84,7 +85,7 @@ app.layout = html.Div([
     Input("Datum", "end_date"))
 def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch, startDatum, endDatum):
     print(startDatum, endDatum)
-    query=sql.update_handler(Bezirk,ArtdesFahrrads, Tageszeit, Versuch)
+    query=sql.update_handler(Bezirk,ArtdesFahrrads, Tageszeit, Versuch, startDatum, endDatum)
     # sql = '''
     #         select count("LOR"), "PLR_NAME", "PLR_ID", "LOR", "Gemeinde_name"
     #         from fahrraddiebstahl, lor_pl, bezirksgrenzen
@@ -106,7 +107,7 @@ def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch, startDatum, endDatum)
         colorscale=[[0, 'rgb(255,255,255)'],[1, 'rgb(255,0,0)']],  # Choose a colorscale
         zmin=0,  # Set the minimum value for color mapping
         zmax=350,  # Set the maximum value for color mapping
-        marker_opacity=0.7,  # Set the opacity of the markers
+        marker_opacity=0.5,  # Set the opacity of the markers
         marker_line_width=1,  # Set the width of marker lines
         colorbar=dict(title='Anzahl Diebstähle'), # Set title of bar on the right
         hoverinfo="none", 
@@ -115,7 +116,7 @@ def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch, startDatum, endDatum)
         )
 
     layout = go.Layout(
-        mapbox_style='white-bg',#'carto-positron',  # Choose a mapbox style
+        mapbox_style='open-street-map',#'carto-positron',  # Choose a mapbox style
         mapbox_zoom=9,  # Set the initial zoom level
         mapbox_center= {"lat": 52.516208190476227, "lon": 13.376648940623779}  # Set the initial center of the map
         )
