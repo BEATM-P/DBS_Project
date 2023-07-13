@@ -64,18 +64,18 @@ app.layout = html.Div([
         multi=True,
         placeholder= 'Bezirk',
         id = 'Bezirk'),
+
+    dcc.Dropdown(
+        ['Damenfahrrad', 'Lastenfahrrad', 'Fahrrad', 'Herrenfahrrad', 'diverse Fahrräder', 'Kinderfahrrad', 'Mountainbike', 'Rennrad'],
+        multi=True,
+        placeholder='Art des Fahrrads',
+        id='ArtdesFahrrads'),
     dcc.Dropdown(
         ['open-street-map', 'white-bg'],
         multi=False,
         placeholder= 'Map Style',
         id = 'style'),
     
-    dcc.Dropdown(
-        ['Damenfahrrad', 'Lastenfahrrad', 'Fahrrad', 'Herrenfahrrad', 'diverse Fahrräder', 'Kinderfahrrad', 'Mountainbike', 'Rennrad'],
-        multi=True,
-        placeholder='Art des Fahrrads',
-        id='ArtdesFahrrads'),
-
     dcc.Graph(id="graph", style={'width': '90vw', 'height': '90vh'} ),
     html.P("Map data provided by \"Amt für Statistik Berlin-Brandenburg\"")
 ])
