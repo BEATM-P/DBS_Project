@@ -3,7 +3,8 @@ class SQLGenerator:
         self.sqls={"select": ['count("LOR")','"PLR_ID"','"PLR_NAME"','"Gemeinde_name"'],
                 "from": ['"lor_pl"', '"fahrraddiebstahl"'],
                 "joins":['"LOR" = "PLR_ID"'],
-                "cond": {"bezirke":set(), "types":set(), "showVersuch":True, "showSuccess":True, "time":None}}
+                "cond": {"bezirke":set(), "types":set(), "showVersuch":True, "showSuccess":True, "time":None},
+                "order": ['count DESC']}
 
 
     def update_handler(self, Bezirk,ArtdesFahrrads, Tageszeit, Versuch, startDatum, endDatum):
@@ -35,6 +36,7 @@ class SQLGenerator:
         strq+=' , '.join(self.sqls["from"])
         strq+=("\nWHERE ")
         strq+='\n AND '.join(self.sqls["joins"])
+        
 
         #BEZIRKE
         if self.sqls["cond"]["bezirke"]!=set():
@@ -70,8 +72,10 @@ class SQLGenerator:
             strq+=f'\n AND (\"TATZEIT_ANFANG_STUNDE\" <= \'06:00\' OR \"TATZEIT_ANFANG_STUNDE\" >= \'22:00\')'
 
 
-        strq+="\n GROUP BY"
+        strq+="\n GROUP BY "
         strq+=" , ".join(self.sqls["select"][1:])
+        strq+="\n ORDER BY "
+        strq+="".join(self.sqls["order"])
 
         print(strq)
         return strq+";"

@@ -103,7 +103,7 @@ def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch, startDatum, endDatum,
         z=countdf['count'],  # Values to be mapped to colors
         colorscale=[[0, 'rgb(255,255,255)'],[1, 'rgb(255,0,0)']],  # Choose a colorscale
         zmin=0,  # Set the minimum value for color mapping
-        zmax=350,  # Set the maximum value for color mapping
+        zmax=int(countdf['count'][0]),  # Set the maximum value for color mapping
         marker_opacity=0.5,  # Set the opacity of the markers
         marker_line_width=1,  # Set the width of marker lines
         colorbar=dict(title='Anzahl Diebstähle'), # Set title of bar on the right
@@ -121,6 +121,7 @@ def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch, startDatum, endDatum,
         mapbox_zoom=9,  # Set the initial zoom level
         mapbox_center= {"lat": 52.516208190476227, "lon": 13.376648940623779}  # Set the initial center of the map
         )
+        
 
 
     fig = go.Figure(data=trace, layout=layout)
