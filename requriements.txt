@@ -1,7 +1,5 @@
 psycopg2-binary
 pandas
-#django
-#djangorestframework
 plotly
 geopandas
 sqlalchemy
