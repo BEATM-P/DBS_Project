@@ -109,7 +109,7 @@ def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch, startDatum, endDatum,
         colorbar=dict(title='Anzahl Diebstähle'), # Set title of bar on the right
         hoverinfo="none", 
         customdata=countdf,
-        hovertemplate="Bezirk: %{customdata[3]}"+"<br>Planungsraum: %{customdata[2]}"+"<br>Fahrraddiebstähle: %{z}"
+        hovertemplate="Bezirk: %{customdata[3]}"+"<br>Planungsraum: %{customdata[2]}"+"<br>Fahrraddiebstähle: %{z}<extra></extra>"
         )
     if style==None:
         style="open-street-map"
