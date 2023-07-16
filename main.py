@@ -112,7 +112,7 @@ def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch, startDatum, endDatum,
         zmax=int(countdf['z'][0]),  # Set the maximum value for color mapping
         marker_opacity=0.5,  # Set the opacity of the markers
         marker_line_width=1,  # Set the width of marker lines
-        colorbar=dict(title='Anzahl Diebstähle'), # Set title of bar on the right
+        colorbar=dict(title=Schadenshoehe), # Set title of bar on the right
         hoverinfo="none", 
         customdata=countdf,
         hovertemplate="Bezirk: %{customdata[3]}"+"<br>Planungsraum: %{customdata[2]}"+f"<br>{Schadenshoehe}:"+" %{z}<extra></extra>"
