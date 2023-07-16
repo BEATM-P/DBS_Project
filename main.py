@@ -72,7 +72,12 @@ app.layout = html.Div([
         multi=False,
         placeholder= 'Map Style',
         id = 'style'),
-    
+    dcc.RadioItems(
+         ['Anzahl Diebstähle', 'Schadenshöhe'],
+         'Anzahl Diebstähle', 
+         id='Schadenshöhe', 
+         inline=True),
+
     dcc.Graph(id="graph", style={'width': '90vw', 'height': '90vh'} ),
     html.P("Map data provided by \"Amt für Statistik Berlin-Brandenburg\"")
 ])
@@ -86,10 +91,11 @@ app.layout = html.Div([
     Input("Versuch", "value"),
     Input("Datum", "start_date"),
     Input("Datum", "end_date"),
-    Input("style","value"))
-def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch, startDatum, endDatum, style):
-    print(startDatum, endDatum)
-    query=sql.update_handler(Bezirk,ArtdesFahrrads, Tageszeit, Versuch, startDatum, endDatum)
+    Input("style","value"),
+    Input("Schadenshöhe", "value"))
+def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch, startDatum, endDatum, style, Schadenshoehe):
+    print(Schadenshoehe)
+    query=sql.update_handler(Bezirk,ArtdesFahrrads, Tageszeit, Versuch, startDatum, endDatum, Schadenshoehe)
 
     countdf = pd.read_sql_query(query, conn)       # Create dataframe with Query 
 
@@ -100,16 +106,16 @@ def create_map(Bezirk, Tageszeit, ArtdesFahrrads, Versuch, startDatum, endDatum,
     trace = go.Choroplethmapbox(
         geojson=jon,  # GeoJSON data or DataFrame with geographical data
         locations=countdf["PLR_ID"],  # List of locations or region identifiers
-        z=countdf['count'],  # Values to be mapped to colors
+        z=countdf['z'],  # Values to be mapped to colors
         colorscale=[[0, 'rgb(255,255,255)'],[1, 'rgb(255,0,0)']],  # Choose a colorscale
         zmin=0,  # Set the minimum value for color mapping
-        zmax=int(countdf['count'][0]),  # Set the maximum value for color mapping
+        zmax=int(countdf['z'][0]),  # Set the maximum value for color mapping
         marker_opacity=0.5,  # Set the opacity of the markers
         marker_line_width=1,  # Set the width of marker lines
         colorbar=dict(title='Anzahl Diebstähle'), # Set title of bar on the right
         hoverinfo="none", 
         customdata=countdf,
-        hovertemplate="Bezirk: %{customdata[3]}"+"<br>Planungsraum: %{customdata[2]}"+"<br>Fahrraddiebstähle: %{z}<extra></extra>"
+        hovertemplate="Bezirk: %{customdata[3]}"+"<br>Planungsraum: %{customdata[2]}"+f"<br>{Schadenshoehe}:"+" %{z}<extra></extra>"
         )
     if style==None:
         style="open-street-map"

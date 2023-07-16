@@ -1,13 +1,13 @@
 class SQLGenerator:
     def __init__(self) -> None:
-        self.sqls={"select": ['count("LOR")','"PLR_ID"','"PLR_NAME"','"Gemeinde_name"'],
+        self.sqls={"select": ['count("LOR") as z','"PLR_ID"','"PLR_NAME"','"Gemeinde_name"'],
                 "from": ['"lor_pl"', '"fahrraddiebstahl"'],
                 "joins":['"LOR" = "PLR_ID"'],
                 "cond": {"bezirke":set(), "types":set(), "showVersuch":True, "showSuccess":True, "time":None},
-                "order": ['count DESC']}
+                "order": 'z DESC'}
 
 
-    def update_handler(self, Bezirk,ArtdesFahrrads, Tageszeit, Versuch, startDatum, endDatum):
+    def update_handler(self, Bezirk,ArtdesFahrrads, Tageszeit, Versuch, startDatum, endDatum, Schadenshoehe):
         
         if Bezirk!=None:
             self.sqls["cond"]["bezirke"]=set(Bezirk)
@@ -22,6 +22,10 @@ class SQLGenerator:
             self.sqls["cond"]["startDatum"]=startDatum+ " 00:00:00"#datetime.combine(date(startDatum), time(0))
         if endDatum!=None:
             self.sqls["cond"]["endDatum"]=endDatum + " 23:59:59"#datetime.combine(date(endDatum), time(0))       #Maybe make take the next day so specified endDatum is included in results
+        if Schadenshoehe=="Schadenshöhe":
+            self.sqls["select"][0]='sum("SCHADENSHOEHE") as z'
+        elif Schadenshoehe=="Anzahl Diebstähle":
+            self.sqls["select"][0]='count("LOR") as z'
 
         return self.construct_sql()
      
@@ -92,34 +96,7 @@ class SQLGenerator:
 
 
 
-    def add_time(self, starttime=None, endtime=None):
-        if starttime==None and endtime==None:
-            print("Who called this function without input?")
-            return
-        elif endtime!=None:
-            self.sqls["cond"]["endtime"]=f'"TATZEIT_ENDE_STUNDE" < {endtime}'
-        elif starttime!=None:
-            self.sqls["cond"]["starttime"]=f'"TATZEIT_ANFANG_STUNDE" > {starttime}'
-
-    def remove_time(self,time):
-        self.sqls["cond"].remove(time)
-
-    def show_bezirk(self, bezirk):
-        if bezirk in self.sqls.cond["bezirke"]:
-            self.sqls.cond["bezirke"].remove(bezirk)
-
-    def hide_bezirk(self, bezirk):
-        if not bezirk in self.sqls.cond["bezirke"]:
-            self.sqls.cond["bezirke"].append(bezirk)
-
-    def show_type(self, type):
-        if type in self.sqls.cond["types"]:
-            self.sqls.cond["types"].remove(type)
-
-    def hide_type(self, type):
-        if not type in self.sqls.cond["types"]:
-            self.sqls.cond["types"].append(type)
-
+    
     def versuch(self, showVersuch=None, showSuccess=None):
         print(showSuccess,showVersuch)
         if showVersuch==None and showSuccess==None:
